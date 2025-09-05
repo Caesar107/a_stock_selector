@@ -1,0 +1,106 @@
+# 数据源配置
+data:
+  tushare_token: ""  # Tushare API Token，请从环境变量TUSHARE_TOKEN设置
+  data_dir: "data"
+  cache_enabled: true
+  cache_duration: 3600  # 缓存时间(秒)
+
+# 模型配置
+model:
+  input_dim: 100  # 输入特征维度
+  d_model: 256    # Transformer模型维度
+  nhead: 8        # 注意力头数
+  num_layers: 6   # Transformer层数
+  seq_length: 30  # 序列长度(天)
+  dropout: 0.1    # Dropout率
+  num_classes: 2  # 分类数量
+
+# 训练配置
+training:
+  batch_size: 32
+  learning_rate: 1e-4
+  num_epochs: 100
+  early_stopping_patience: 10
+  optimizer: "adamw"  # adam, adamw, sgd
+  scheduler: "cosine"  # cosine, step, plateau
+  loss: "multitask"   # multitask, focal, crossentropy
+  alpha: 0.7          # 分类损失权重
+  beta: 0.3           # 回归损失权重
+  weight_decay: 1e-4
+  grad_clip: 1.0
+
+# 特征工程配置
+features:
+  technical_indicators: true
+  price_patterns: true
+  market_microstructure: true
+  sentiment_features: true
+  sequence_length: 30
+  feature_selection: true
+  max_features: 50
+
+# 回测配置
+backtest:
+  initial_capital: 1000000    # 初始资金
+  commission_rate: 0.0003     # 手续费率
+  max_position_size: 0.1      # 单只股票最大仓位
+  max_stocks: 10              # 最大持仓数量
+  holding_period: 1           # 持仓天数
+  start_date: "2020-01-01"
+  end_date: "2023-12-31"
+
+# 选股配置
+selection:
+  top_stocks: 5               # 每日推荐股票数量
+  min_probability: 0.6        # 最小涨停概率阈值
+  min_confidence: 0.7         # 最小置信度阈值
+  exclude_st: true            # 排除ST股票
+  exclude_new: true           # 排除新股(上市60天内)
+  min_market_cap: 1000000000  # 最小市值(10亿)
+
+# 推送配置
+notification:
+  # 邮件推送
+  email:
+    enabled: false
+    smtp_server: "smtp.qq.com"
+    smtp_port: 587
+    sender_email: ""        # 从环境变量EMAIL_SENDER设置
+    sender_password: ""     # 从环境变量EMAIL_PASSWORD设置
+    receiver_emails:
+      - "your_email@example.com"
+  
+  # 微信推送(Server酱)
+  wechat:
+    enabled: false
+    sckey: ""               # 从环境变量WECHAT_SCKEY设置
+  
+  # 钉钉推送
+  dingtalk:
+    enabled: false
+    webhook_url: ""         # 从环境变量DINGTALK_WEBHOOK设置
+  
+  # Telegram推送
+  telegram:
+    enabled: false
+    bot_token: ""           # 从环境变量TELEGRAM_BOT_TOKEN设置
+    chat_id: ""             # 从环境变量TELEGRAM_CHAT_ID设置
+
+# 调度配置
+schedule:
+  enabled: false
+  predict_time: "08:30"     # 每日预测时间
+  weekend_enabled: false    # 是否在周末运行
+  
+# 日志配置
+logging:
+  level: "INFO"             # DEBUG, INFO, WARNING, ERROR
+  max_file_size: 10485760   # 日志文件最大大小(10MB)
+  backup_count: 5           # 保留日志文件数量
+  
+# 风险控制
+risk_control:
+  max_daily_trades: 10      # 每日最大交易数量
+  max_position_value: 100000 # 单只股票最大仓位价值
+  stop_loss_pct: -0.05      # 止损比例
+  take_profit_pct: 0.15     # 止盈比例
